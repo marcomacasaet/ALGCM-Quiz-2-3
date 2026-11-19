@@ -75,6 +75,7 @@ def sortThroughWords(word_database):
                 
 
 def levenshtein(word1, word2):
+    #i am thinking of a tuple here to store the edit distance and the different characters for both words
     
     return
 
