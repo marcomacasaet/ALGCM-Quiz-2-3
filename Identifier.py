@@ -109,7 +109,9 @@ def identify(allwords, uq):
     for i in range(uq):
         if allwords[i]["Fil_word"] not in existing:
             for j in range(len(existing)):
-                levenshtein = levenshteinDistance(allwords[i]["Fil_word"], existing[j]["Fil_word"])       
+                levenshtein = abs(len(allwords[i]["Fil_word"]) - len(existing[j]["Fil_word"]))
+                if(levenshtein <= 1):
+                    levenshtein = levenshteinDistance(allwords[i]["Fil_word"], existing[j]["Fil_word"])       
                 # for levenshtein distance 1 , with same first and last letter
                 if levenshtein == 1 and allwords[i]["Fil_word"][0] == existing[j]["Fil_word"][0] and allwords[i]["Fil_word"][len(allwords[i]["Fil_word"])-1] == existing[j]["Fil_word"][len(existing[j]["Fil_word"])-1]:
                     orig, diff, isVar = isVariant(allwords[i]["Fil_word"], existing[j]["Fil_word"])   
