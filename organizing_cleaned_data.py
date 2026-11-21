@@ -1,4 +1,3 @@
-
 def organize_cleaned_data():
     #print("program starting")
 
@@ -35,5 +34,15 @@ def organize_cleaned_data():
     #for Fil_word, Count in DB_by_count:
         #print(Fil_word, " Count: ", Count, "\n")
 
+    #converting touples to dictionaries, mb I thought they were interchangable
+    DB_by_count_dict = []
+    for Fil_word, Count in DB_by_count:
+        DB_by_count_dict.append(
+            {
+                "Fil_word": Fil_word,
+                "Count": Count
+            }
+        )
+        
     #print("program finished running")
-    return DB_by_count #returns a list of Dictionaries (tuples) containing the word and its count, sorted by count in descending order
+    return DB_by_count_dict
