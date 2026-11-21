@@ -26,5 +26,5 @@ for i in range(len(Sorted_DB)):
 
 #sorts the database by count in descending order
 DB_by_count = sorted(Sorted_DB, key=lambda count: count[1], reverse=True) #uncomment the following lines to print the sorted database by count (WIP)
-#for i in range(len(DB_by_count)):
-    #print(DB_by_count[i][0], " Count: ", DB_by_count[i][1], "\n")
+for i in range(len(DB_by_count)):
+    print(DB_by_count[i][0], " Count: ", DB_by_count[i][1], "\n")

@@ -40,11 +40,13 @@ def hasNumber(word: str):
 
 def processWord(word : str):
     
-    for letter in word:
-        if letter.isalpha() == False:
-            word.replace(letter,"").split()
+    newWord = list()
     
-    return word
+    for letter in word:
+        if letter.isalpha() == True:
+            newWord.append(letter)
+    
+    return "".join(newWord)
 
 allWords = readFile()
 f1 = open("Processed.txt","w", encoding="utf-8", errors="ignore")
@@ -60,17 +62,16 @@ for sentence in allWords:
                 word = word.lower()
                 startOfSentence = False
             
-            if word.isascii() == True and word.istitle() == False:
-                if '-' in word or "'" in word or word.isalpha():
-                    f1.write(word)
-                    f1.write("\n")
-                    processedWords.append(word)
-                else:
+            if word.isascii() == True:
+                if '-' not in word and "'" not in word and word.isalpha()==False:
                     word = processWord(word)
         
-                if word:
+                if word and word.istitle() == False:
                     f1.write(word)
                     f1.write("\n")
                     processedWords.append(word)
-#print(processedWords) print statement for testing
+
+f1.close()
+#print(processedWords) 
+#print statement for testing
     
