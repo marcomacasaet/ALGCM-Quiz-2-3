@@ -1,30 +1,38 @@
-import csv
+#import csv
 
-#Fil_word, and Count are the columns of the database
-Sorted_DB = [
-    ["", 0]
-]
+print("program starting")
 
-# Opening the CSV file
-with open("Processed.txt", mode='r') as f: 
-    
-        for line in f:
+# Fil_word and Count are now stored as: { word, count }
+Sorted_DB = {}
 
-            #if the word is already in the database, increment the count and break the loop
-            for i in range(len(Sorted_DB)):
-                if line == Sorted_DB[i][0]:
-                    Sorted_DB[i][1] += 1
-                    break
+# Opening the TXT file
+with open("Processed.txt", mode='r') as f:
 
-            #if the word is not in the database, add it to the database with a count of 1
-            if line != Sorted_DB[i][0]:
-                Sorted_DB.append([line, 1])
+    #print("reading")
 
-#prints the word and the count of the word in the database, not yet sorted by count
-for i in range(len(Sorted_DB)):
-    print(Sorted_DB[i][0], " Count: ", Sorted_DB[i][1], "\n")
+    for line in f:
 
-#sorts the database by count in descending order
-DB_by_count = sorted(Sorted_DB, key=lambda count: count[1], reverse=True) #uncomment the following lines to print the sorted database by count (WIP)
-for i in range(len(DB_by_count)):
-    print(DB_by_count[i][0], " Count: ", DB_by_count[i][1], "\n")
+        line = line.strip()
+
+        #print("counting")
+
+        #if the word is already in the database, increment the count
+        if line in Sorted_DB:
+            Sorted_DB[line] += 1
+        #if the word is not in the database, add it to the database with a count of 1
+        else:
+            #print("adding")
+            Sorted_DB[line] = 1
+
+# prints the word and the count of the word in the database, not yet sorted by count
+for Fil_word in Sorted_DB:
+    print(Fil_word, " Count: ", Sorted_DB[Fil_word], "\n")
+
+'''
+# sorts the database by count in descending order
+DB_by_count = sorted(Sorted_DB.items(),key=lambda count: count[1],reverse=True) #uncomment the following lines to print the sorted database by count (WIP)
+
+for Fil_word, Count in DB_by_count:
+    #print(Fil_word, " Count: ", Count, "\n")
+'''
+print("program finished running")
