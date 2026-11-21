@@ -88,14 +88,13 @@ def isVariant(word1, word2):
         for i in range(len(word1)):
             if word1[i] != word2[i]:
                 original = "" + word1[i]
-                difference = "" + word1[2]
+                difference = "" + word1[i]
 
                 # CorV checks consistency of sandwiching letters to filter out words from other languages
                 if "" + CorV(word1[i-1]) + CorV(word1[i+1]) == "" + CorV(word2[i-1]) + CorV(word2[i+1]) and followsRules(original, difference):
                     return original, difference, True
 
-    else: 
-        return original, difference, False
+    return original, difference, False
 
 """
 allwords    : list      - list of all words in the dataset, including typos, plus their wordcount (sorted by word count)
@@ -106,25 +105,18 @@ returns variants_log (a list of dictionaries with all the relevant spelling vari
 def identify(allwords, uq):
     existing = [] # list of existing words
     variants_log = [] # list of logs (dictionaries) of spelling variants
-    avg = 0
-
-    for i in range(uq):
-        avg += allwords[i]["Count"]
-    avg = avg / uq
 
     for i in range(uq):
         if allwords[i]["Fil_word"] not in existing:
             for j in range(len(existing)):
                 levenshtein = levenshteinDistance(allwords[i]["Fil_word"], existing[j]["Fil_word"])       
                 # for levenshtein distance 1 , with same first and last letter
-                if levenshtein == 1 and allwords[i]["Fil_word"][0] == existing[j]["Fil_word"][0] and allwords[i]["Fil_word"][len(allwords[i]["Fil_word"])] == existing[j]["Fil_word"][len(existing[j]["Fil_word"])]:
+                if levenshtein == 1 and allwords[i]["Fil_word"][0] == existing[j]["Fil_word"][0] and allwords[i]["Fil_word"][len(allwords[i]["Fil_word"])-1] == existing[j]["Fil_word"][len(existing[j]["Fil_word"])-1]:
                     orig, diff, isVar = isVariant(allwords[i]["Fil_word"], existing[j]["Fil_word"])   
                     if isVar:
                         variants_log.append({"word1": existing[j]["Fil_word"], "word2": allwords[i]["Fil_word"], "word1_count": existing[j]["Count"], "word2_count": allwords[i]["Count"], "character_difference": diff + " vs. " + orig})
                         break
             else:
-                existing.append(allwords[i]["Fil_word"])
+                existing.append(allwords[i])
             
     return variants_log
-
-
