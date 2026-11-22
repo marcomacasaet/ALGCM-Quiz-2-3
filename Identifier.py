@@ -45,7 +45,7 @@ Check if the difference specified is valid based on a set of rules/trends.
 Returns True if difference is valid and False otherwise.
 """
 def followsRules(a, b):
-    cdiffs = { ("d", "r"), ("e", "i"), ("o", "u"), ("uw", "w"), ("iy", "y"), ("eh", "ih"), ("om", "um"), ("uw", "w"), ("c", "k"), ("o", "w"), ("i", "y"), ("b", "v") }
+    cdiffs = { ("d", "r"), ("e", "i"), ("o", "u"), ("uw", "w"), ("iy", "y"), ("eh", "ih"), ("om", "um"), ("uw", "w") }
 
     # a is always longer
     if len(a) < len(b):
