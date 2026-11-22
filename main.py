@@ -1,6 +1,9 @@
+import organizing_cleaned_data
+import Identifier
+
 def main():
-    allwords_dtb = organize_cleaned_data()
-    variants_log = identify(allwords_dtb, len(allwords_dtb))
+    allwords_dtb = organizing_cleaned_data.organize_cleaned_data()
+    variants_log = Identifier.identify(allwords_dtb, len(allwords_dtb))
 
     #print(len(allwords_dtb))
     #print(len(variants_log))
