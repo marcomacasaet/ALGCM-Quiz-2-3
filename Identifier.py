@@ -109,7 +109,7 @@ def identify(allwords, uq):
     variants_log = [] # list of logs (dictionaries) of spelling variants
     existing.append(allwords[0])
 
-    for i in range(uq):
+    for i in range(1, uq):
         print("> Checking for variant ! :3")
 
         for j in range(len(existing)):
@@ -126,14 +126,15 @@ def identify(allwords, uq):
                 orig, diff, isVar = isVariant(allwords[i]["Fil_word"], existing[j]["Fil_word"])   
                 if isVar:
                     variants_log.append({"word1": existing[j]["Fil_word"], "word2": allwords[i]["Fil_word"], "word1_count": existing[j]["Count"], "word2_count": allwords[i]["Count"], "character_difference": diff + " vs. " + orig})
-                    print("> Variant added ! :> ")
+                    print("> Variant added ! :> ", variants_log[-1]["word1"], " MATCH ", variants_log[-1]["word2"])
                     found = True
                     break
             else:
+                print("> Not matched ! :c || word: ", allwords[i]["Fil_word"], "vs.", existing[j]["Fil_word"])
                 found = False
                 
         if not found:
-            print("> No variant found ! :c || word: ", allwords[i]["Fil_word"], "vs.", existing[j]["Fil_word"])
+            print("> No variant found ! :c || word: ", allwords[i]["Fil_word"])
             existing.append(allwords[i])
     
     print("> Variant identification complete !! Variants log length : ", len(variants_log))
