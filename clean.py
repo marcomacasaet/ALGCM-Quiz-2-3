@@ -43,7 +43,7 @@ def processWord(word : str):
     newWord = list()
     
     for letter in word:
-        if letter.isalpha() == True:
+        if letter.isalpha() == True or letter == "'" or letter == "-":
             newWord.append(letter)
     
     return "".join(newWord)
@@ -63,8 +63,8 @@ for sentence in allWords:
                 startOfSentence = False
             
             if word.isascii() == True:
-                if '-' not in word and "'" not in word and word.isalpha()==False:
-                    word = processWord(word)
+                if word.isalpha()==False:
+                    word = processWord(word).lower()
         
                 if word and word.istitle() == False:
                     f1.write(word)
@@ -72,6 +72,9 @@ for sentence in allWords:
                     processedWords.append(word)
 
 f1.close()
+
+#processedWords.sort()
+
 #print(processedWords) 
 #print statement for testing
     
