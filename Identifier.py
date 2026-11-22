@@ -108,34 +108,43 @@ def identify(allwords, uq):
     existing = [] # list of existing words
     variants_log = [] # list of logs (dictionaries) of spelling variants
     existing.append(allwords[0])
+    explored = []
+    wordcounter = uq
 
     for i in range(1, uq):
         print("> Checking for variant ! :3")
 
         for j in range(len(existing)):
-            # length comparison base for levenshtein
-            levenshtein = abs(len(allwords[i]["Fil_word"]) - len(existing[j]["Fil_word"])) 
-            sameSandwich = allwords[i]["Fil_word"][0] == existing[j]["Fil_word"][0] and allwords[i]["Fil_word"][len(allwords[i]["Fil_word"])-1] == existing[j]["Fil_word"][len(existing[j]["Fil_word"])-1]
+            
+            if (allwords[i]["Fil_word"],existing[j]["Fil_word"]) not in explored and (existing[j]["Fil_word"],allwords[i]["Fil_word"]) not in explored:
+                # length comparison base for levenshtein
+                levenshtein = abs(len(allwords[i]["Fil_word"]) - len(existing[j]["Fil_word"])) 
+                sameSandwich = allwords[i]["Fil_word"][0] == existing[j]["Fil_word"][0] and allwords[i]["Fil_word"][len(allwords[i]["Fil_word"])-1] == existing[j]["Fil_word"][len(existing[j]["Fil_word"])-1]
 
-            # only use actual levenshtein to find words that need replacement, for shortening processing time
-            if levenshtein == 0 or (levenshtein == 1 and sameSandwich):
-                levenshtein = levenshteinDistance(allwords[i]["Fil_word"], existing[j]["Fil_word"])     
+                # only use actual levenshtein to find words that need replacement, for shortening processing time
+                if levenshtein == 0 or (levenshtein == 1 and sameSandwich):
+                    levenshtein = levenshteinDistance(allwords[i]["Fil_word"], existing[j]["Fil_word"])     
                     
-            # for levenshtein distance 1 , with same first and last letter
-            if levenshtein == 1 and sameSandwich:
-                orig, diff, isVar = isVariant(allwords[i]["Fil_word"], existing[j]["Fil_word"])   
-                if isVar:
-                    variants_log.append({"word1": existing[j]["Fil_word"], "word2": allwords[i]["Fil_word"], "word1_count": existing[j]["Count"], "word2_count": allwords[i]["Count"], "character_difference": diff + " vs. " + orig})
-                    print("> Variant added ! :> ", variants_log[-1]["word1"], " MATCH ", variants_log[-1]["word2"])
-                    found = True
-                    break
-            else:
-                print("> Not matched ! :c || word: ", allwords[i]["Fil_word"], "vs.", existing[j]["Fil_word"])
-                found = False
+                # for levenshtein distance 1 , with same first and last letter
+                if levenshtein == 1 and sameSandwich:
+                    orig, diff, isVar = isVariant(allwords[i]["Fil_word"], existing[j]["Fil_word"])   
+                    if isVar:
+                        variants_log.append({"word1": existing[j]["Fil_word"], "word2": allwords[i]["Fil_word"], "word1_count": existing[j]["Count"], "word2_count": allwords[i]["Count"], "character_difference": diff + " vs. " + orig})
+                        print("> Words until program ends: ", wordcounter, "> Variant added ! :> ", variants_log[-1]["word1"], " MATCH ", variants_log[-1]["word2"])
+                        found = True
+                        break
+                else:
+                    print("> Words until program ends: ", wordcounter, "> Not matched ! :c || word: ", allwords[i]["Fil_word"], "vs.", existing[j]["Fil_word"])
+                    found = False
+                
+            explored.append((allwords[i]["Fil_word"],allwords[j]["Fil_word"]))
+            explored.append((allwords[j]["Fil_word"],allwords[i]["Fil_word"]))
                 
         if not found:
             print("> No variant found ! :c || word: ", allwords[i]["Fil_word"])
             existing.append(allwords[i])
+            
+        wordcounter-=1
     
     print("> Variant identification complete !! Variants log length : ", len(variants_log))
     return variants_log
