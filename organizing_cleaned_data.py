@@ -1,5 +1,5 @@
 def organize_cleaned_data():
-    #print("program starting")
+    print("program starting")
 
     # Fil_word and Count are now stored as: { word, count }
     Sorted_DB = {}
@@ -29,20 +29,20 @@ def organize_cleaned_data():
 
 
     # sorts the database by count in descending order
-    DB_by_count = sorted(Sorted_DB.items(),key=lambda count: count[1],reverse=True) #uncomment the following lines to print the sorted database by count (WIP)
+    DB_by_A_Z = sorted(Sorted_DB.items(), key=lambda word: word[0]) #uncomment the following lines to print the sorted database by count (WIP)
 
-    #for Fil_word, Count in DB_by_count:
-        #print(Fil_word, " Count: ", Count, "\n")
+    #for Fil_word, Count in DB_by_A_Z:
+        #print(Fil_word, " Count: ", Count)
 
-    #converting touples to dictionaries, mb I thought they were interchangable
-    DB_by_count_dict = []
-    for Fil_word, Count in DB_by_count:
-        DB_by_count_dict.append(
+    DB_by_A_Z_dict = []
+    for Fil_word, Count in DB_by_A_Z:
+        DB_by_A_Z_dict.append(
             {
                 "Fil_word": Fil_word,
                 "Count": Count
             }
         )
-        
-    #print("program finished running")
-    return DB_by_count_dict
+    print("program finished running")
+    return DB_by_A_Z_dict
+
+#organize_cleaned_data()
