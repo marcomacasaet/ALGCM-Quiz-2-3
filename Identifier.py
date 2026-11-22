@@ -75,7 +75,9 @@ def isVariant(word1, word2):
 
     # For letter insertions
     if len(word1) != len(word2):
-        for i in range(len(word1)):
+        word1 += " "
+
+        for i in range(len(word2)):
             if word1[i] != word2[i]:
                 original = "" + word1[i]
                 difference = "" + word1[i] + word2[i]
@@ -88,7 +90,7 @@ def isVariant(word1, word2):
         for i in range(len(word1)):
             if word1[i] != word2[i]:
                 original = "" + word1[i]
-                difference = "" + word1[i]
+                difference = "" + word2[i]
 
                 # CorV checks consistency of sandwiching letters to filter out words from other languages
                 if "" + CorV(word1[i-1]) + CorV(word1[i+1]) == "" + CorV(word2[i-1]) + CorV(word2[i+1]) and followsRules(original, difference):
@@ -105,20 +107,34 @@ returns variants_log (a list of dictionaries with all the relevant spelling vari
 def identify(allwords, uq):
     existing = [] # list of existing words
     variants_log = [] # list of logs (dictionaries) of spelling variants
+    existing.append(allwords[0])
 
     for i in range(uq):
-        if allwords[i]["Fil_word"] not in existing:
-            for j in range(len(existing)):
-                levenshtein = abs(len(allwords[i]["Fil_word"]) - len(existing[j]["Fil_word"]))
-                if(levenshtein <= 1):
-                    levenshtein = levenshteinDistance(allwords[i]["Fil_word"], existing[j]["Fil_word"])       
-                # for levenshtein distance 1 , with same first and last letter
-                if levenshtein == 1 and allwords[i]["Fil_word"][0] == existing[j]["Fil_word"][0] and allwords[i]["Fil_word"][len(allwords[i]["Fil_word"])-1] == existing[j]["Fil_word"][len(existing[j]["Fil_word"])-1]:
-                    orig, diff, isVar = isVariant(allwords[i]["Fil_word"], existing[j]["Fil_word"])   
-                    if isVar:
-                        variants_log.append({"word1": existing[j]["Fil_word"], "word2": allwords[i]["Fil_word"], "word1_count": existing[j]["Count"], "word2_count": allwords[i]["Count"], "character_difference": diff + " vs. " + orig})
-                        break
+        print("> Checking for variant ! :3")
+
+        for j in range(len(existing)):
+            # length comparison base for levenshtein
+            levenshtein = abs(len(allwords[i]["Fil_word"]) - len(existing[j]["Fil_word"])) 
+            sameSandwich = allwords[i]["Fil_word"][0] == existing[j]["Fil_word"][0] and allwords[i]["Fil_word"][len(allwords[i]["Fil_word"])-1] == existing[j]["Fil_word"][len(existing[j]["Fil_word"])-1]
+
+            # only use actual levenshtein to find words that need replacement, for shortening processing time
+            if levenshtein == 0 or (levenshtein == 1 and sameSandwich):
+                levenshtein = levenshteinDistance(allwords[i]["Fil_word"], existing[j]["Fil_word"])     
+                    
+            # for levenshtein distance 1 , with same first and last letter
+            if levenshtein == 1 and sameSandwich:
+                orig, diff, isVar = isVariant(allwords[i]["Fil_word"], existing[j]["Fil_word"])   
+                if isVar:
+                    variants_log.append({"word1": existing[j]["Fil_word"], "word2": allwords[i]["Fil_word"], "word1_count": existing[j]["Count"], "word2_count": allwords[i]["Count"], "character_difference": diff + " vs. " + orig})
+                    print("> Variant added ! :> ")
+                    found = True
+                    break
             else:
-                existing.append(allwords[i])
-            
+                found = False
+                
+        if not found:
+            print("> No variant found ! :c || word: ", allwords[i]["Fil_word"], "vs.", existing[j]["Fil_word"])
+            existing.append(allwords[i])
+    
+    print("> Variant identification complete !! Variants log length : ", len(variants_log))
     return variants_log
